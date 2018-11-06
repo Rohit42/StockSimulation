@@ -9,7 +9,7 @@ var config = {
   databaseURL: "https://stocksim-7b0e3.firebaseio.com",
   projectId: "stocksim-7b0e3",
   storageBucket: "",
-  messagingSenderId: "97488453538"
+  messagingSenderId: "97488453538",
 };
 firebase.initializeApp(config);
 firebase.firestore().settings({ timestampsInSnapshots: true });

@@ -56,3 +56,7 @@ input[type=password]:not(.browser-default):focus:not([readonly]) + label{
 .margin_top_short {
   margin-top: 1.5em;
 }
+
+.float_right{
+  float: right;
+}

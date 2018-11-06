@@ -1,42 +1,89 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { firestoreConnect } from 'react-redux-firebase'
+import { firestoreConnect, isLoaded } from 'react-redux-firebase'
 import { compose } from 'redux'
 import { Redirect } from 'react-router-dom'
 
 import moment from 'moment'
-import { Chart, Axis, Series, Tooltip, Cursor, Line } from "react-charts";
+import { ResponsiveLine } from '@nivo/line'
 
 const StockDetails = (props) => {
-  const { auth, stock_info, Timer } = props;
+  const { auth, stock_info, Timer, quantity} = props;
   if (!auth.uid) return <Redirect to='/signin' />
   if (stock_info) {
-    var graph_data = Array.from(stock_info.price.entries());
-    graph_data = graph_data.slice(0, Timer);
+    //graph_data = graph_data.slice(0, Timer);
+    var graph_data = []
+    for (var x = 0; x < Timer; x++){
+      graph_data.push(
+        {
+        "x" : x,
+        "y" : stock_info.price[x]
+        }
+      )
+    }
     return (
       <div className={ ""}>
         <div className="card z-depth-0">
           <div className="card-content">
             <span className="card-title">{stock_info.name}</span>
+            <span className="card-title">{quantity}</span>
             <span className="card-title">{stock_info.price[Timer].toFixed(2)}</span>
             <p>{stock_info.ticker}</p>
           </div>
           <div className="card-action grey lighten-4 grey-text">
             <div className="chart_box">
-              <Chart data={[
+              <ResponsiveLine data={[
                   {
-                    label: stock_info.name,
+                    id: stock_info.name,
                     data: graph_data
                   },
 
                 ]}
-              >
-                <Axis primary type="time" />
-                <Axis type="linear" />
-                <Cursor primary />
-                <Cursor />
-              <Series type={Line} />
-              </Chart>
+              
+                margin={{
+                  "top": 50,
+                  "right": 60,
+                  "bottom": 50,
+                  "left": 60
+              }}
+              xScale={{
+                  "type": "point"
+              }}
+              yScale={{
+                  "type": "linear",
+                  "stacked": true,
+                  "min": "auto",
+                  "max": "auto"
+              }}
+              minY="auto"
+              maxY="auto"
+              stacked={true}
+              axisTop={null}
+              axisRight={null}
+              axisBottom={null}
+              axisLeft={{
+                  "orient": "left",
+                  "tickSize": 5,
+                  "tickPadding": 5,
+                  "tickRotation": 0,
+                  "legend": "Price",
+                  "legendOffset": -40,
+                  "legendPosition": "middle"
+              }}
+              enableGridX={false}
+              enableDots={false}
+              dotSize={2}
+              dotColor="inherit:darker(0.3)"
+              dotBorderWidth={2}
+              dotBorderColor="#ffffff"
+              enableDotLabel={true}
+              dotLabel="y"
+              dotLabelYOffset={-12}
+              animate={true}
+              motionStiffness={90}
+              motionDamping={15}
+
+          />
             </div>
           </div>
         </div>

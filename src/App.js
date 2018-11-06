@@ -12,7 +12,7 @@ import Trade from './components/stocks/Trade'
 class App extends Component {
   render() {
     return (
-      <BrowserRouter>
+      <BrowserRouter forceRefresh={true}>
         <div className="App">
           <Navbar />
           <Switch>

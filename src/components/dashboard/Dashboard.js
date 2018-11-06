@@ -15,7 +15,7 @@ class Dashboard extends Component {
 
 
   render() {
- 
+
     const { stocks, auth, notifications, stock_data, total, liquid, Timer } = this.props;
     if (!auth.uid) return <Redirect to='/signin' /> 
     return (
@@ -66,7 +66,7 @@ const mapStateToProps = (state) => {
 
 
 export default compose(
-  
+
   firestoreConnect([
     { collection: 'users',
     },

@@ -3,10 +3,11 @@ import Notifications from '../dashboard/Notifications'
 import StatusPanel from '../dashboard/StatusPanel'
 import { tradeStock } from '../../store/actions/projectActions'
 import { connect } from 'react-redux'
-import { firestoreConnect } from 'react-redux-firebase'
+import { firestoreConnect, isLoaded } from 'react-redux-firebase'
 import { compose } from 'redux'
 import { Redirect } from 'react-router-dom'
 import StockDetails from './StockDetails';
+import { Input } from 'react-materialize';
 
 class Trade extends Component {
   state = {
@@ -28,10 +29,12 @@ class Trade extends Component {
     
   }
   render() {
+    if (!isLoaded(this.props)) {
+      return <div>Loading...</div>
+    }
     const { stocks, auth, notifications, stock_data, total, liquid, Timer } = this.props;
     if (!auth.uid) return <Redirect to='/signin' /> 
     var detail_name = "Apple"
-
     if (stock_data && this.state.name)  {
       var i;
       for(i = 0; i <  Object.keys(stock_data).length; i++) {
@@ -40,20 +43,49 @@ class Trade extends Component {
         }
       }
     }
+    console.log(detail_name)
     return (
       <div className="container">
           <div className="row">
             <div className="col s12 m6">
+            
               <form className="white margin_top_short" onSubmit={this.handleSubmit}>
-                <h5 className="grey-text text-darken-3">Trade</h5>
-                <div className="input-field">
-                  <input type="text" id='name' list="stocks_to_trade"onChange={this.handleChange} />
-                  <datalist id="stocks_to_trade">
-                      <option value="Apple"/>
-                      <option value="Google"/>
-                  </datalist>
-                  <label htmlFor="name">Stock</label>
-                  
+                <div className="row">
+                    <div className="col m6">
+                        <h5 className="grey-text text-darken-3">Trade</h5>
+                    </div>
+                    <div className="col m6 ">
+                        <div className="float_right">            
+                        <Input name='BuySell' type='radio' value='Buy' label='Buy' />
+                        <Input name='BuySell' type='radio' value='Sell' label='Sell' />
+                        </div>  
+                    </div>
+                </div>
+                <div className="row">
+
+
+                  <Input s={12} id="name" type='select' label="Stock" defaultValue='Apple' onChange={this.handleChange}>
+                      <option value="Apple">Apple</option>
+                      <option value="Google">Google</option>
+                      <option value="Amazon">Amazon</option>
+                      <option value="JP Morgan">JP Morgan</option>
+                      <option value="Goldman Sachs">Goldman Sachs</option>
+                      <option value="P&G">P&G</option>
+                      <option value="Pepsi Co">Pepsi Co</option>
+                      <option value="Coca Cola">Coca Cola</option>
+                      <option value="Exxon Mobil">Exxon Mobil</option>
+                      <option value="Johnson & Johnson">Johnson & Johnson</option>
+                      <option value="United Health">United Health</option>
+                      <option value="Boeing">Boeing</option>
+                      <option value="Ford">Ford</option>
+                      <option value="AT&T">AT&T</option>
+                      <option value="AMD">AMD</option>
+                      <option value="Visa">Visa</option>
+                      <option value="US Steel">US Steel</option>
+                      <option value="S&P Tracker ETF">S&P Tracker ETF</option>
+                      <option value="Russell 2000">Russell 2000</option>
+                  </Input>
+
                 </div>
                 <div className="input-field">
                   <input type="number" id="quantity"  onChange={this.handleChange}></input>
@@ -79,6 +111,8 @@ class Trade extends Component {
     )
   }
 }
+
+
 
 const mapStateToProps = (state) => {
   const uid = state.firebase.auth.uid;
