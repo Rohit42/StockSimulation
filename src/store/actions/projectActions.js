@@ -8,17 +8,24 @@ export const tradeStock = (stock, stock_data, history) => {
     var liquid = getState().firebase.profile.liquid;
     const total = getState().firebase.profile.total;
     const timer = stock_data["Game"]["Timer"];
+    console.log(stock_data)
     console.log(stock_data[stock.name].price);
-    const cost = parseFloat("" + stock_data[stock.name].price[timer]) * parseFloat(stock.quantity + "");
 
-    liquid = liquid - cost;
-    if (stock.name in stock_map) {
-      stock_map[stock.name] = parseFloat(stock_map[stock.name]) + parseFloat(stock.quantity + "");
+    if(stock.transaction === "Buy") {
+      const cost = parseFloat("" + stock_data[stock.name].price[timer]) * parseFloat(stock.quantity + "");
+      liquid = liquid - cost;
+      if (stock.name in stock_map) {
+        stock_map[stock.name] = parseFloat(stock_map[stock.name]) + parseFloat(stock.quantity + "");
+      }
+      else {
+        stock_map[stock.name] =  parseFloat(stock.quantity + "");
+      }
     }
     else {
-      stock_map[stock.name] =  parseFloat(stock.quantity + "");
+      const profit = parseFloat("" + stock_data[stock.name].price[timer]) * parseFloat(stock.quantity + "");
+      liquid = liquid + profit;
+      stock_map[stock.name] = parseFloat(stock_map[stock.name]) - parseFloat(stock.quantity + "");
     }
-  
     firestore.collection('users').doc(traderId).update({
     stocks: stock_map,
     liquid: liquid,

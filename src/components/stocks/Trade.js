@@ -7,13 +7,14 @@ import { firestoreConnect, isLoaded } from 'react-redux-firebase'
 import { compose } from 'redux'
 import { Redirect } from 'react-router-dom'
 import StockDetails from './StockDetails';
-import { Input } from 'react-materialize';
+import { Input , Toast} from 'react-materialize';
 
 class Trade extends Component {
   state = {
     id: '',
-    name: '',
-    quantity: ''
+    name: 'Apple',
+    quantity: '',
+    transaction: ''
   }
   handleChange = (e) => {
     this.setState({
@@ -24,9 +25,40 @@ class Trade extends Component {
   }
   handleSubmit = (e) => {
     e.preventDefault();
-    // console.log(this.state);
-    this.props.tradeStock(this.state, this.props.stock_data, this.props.history );
+    if(this.isTransactionValid()){
+      console.log("true");
+      this.props.tradeStock(this.state, this.props.stock_data, this.props.history );
+      return
+    }
+    console.log("false")
     
+  }
+
+  isTransactionValid() {
+    if(this.state.transaction === '') {
+      return false;
+    }
+    else {
+      if(this.state.transaction === "Sell") {
+        const currentHoldings = this.props.stocks[this.state.name] ?this.props.stocks[this.state.name] : 0
+        if (this.state.quantity > currentHoldings) {
+          window.Materialize.toast("Can't sell stock you don't have!", 2000)
+          return false;
+        }
+
+      }
+      if(this.state.transaction === "Buy") {
+        //Enough cash
+
+
+        const cost = parseFloat("" + this.props.stock_data[this.state.name].price[this.props.Timer]) * parseFloat(this.state.quantity + "");
+        if (this.props.liquid < cost) {
+          window.Materialize.toast("Don't have the money for that! Try selling some stock", 2000)
+          return false;
+        }
+      }
+    }
+    return true
   }
   render() {
     if (!isLoaded(this.props)) {
@@ -43,7 +75,6 @@ class Trade extends Component {
         }
       }
     }
-    console.log(detail_name)
     return (
       <div className="container">
           <div className="row">
@@ -56,8 +87,8 @@ class Trade extends Component {
                     </div>
                     <div className="col m6 ">
                         <div className="float_right">            
-                        <Input name='BuySell' type='radio' value='Buy' label='Buy' />
-                        <Input name='BuySell' type='radio' value='Sell' label='Sell' />
+                        <Input name='BuySell' type='radio' value='Buy' label='Buy' onChange={(e) => this.setState({ transaction: e.target.value })} />
+                        <Input name='BuySell' type='radio' value='Sell' label='Sell' onChange={(e) => this.setState({ transaction: e.target.value })}/>
                         </div>  
                     </div>
                 </div>
@@ -88,7 +119,7 @@ class Trade extends Component {
 
                 </div>
                 <div className="input-field">
-                  <input type="number" id="quantity"  onChange={this.handleChange}></input>
+                  <input type="number" id="quantity" min="0" onChange={this.handleChange}></input>
                   <label htmlFor="quantity">Quantity</label>
                 </div>
                 <div className="input-field">
