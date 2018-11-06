@@ -2,7 +2,8 @@ import React, { Component } from 'react'
 import { Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { signUp } from '../../store/actions/authActions'
-
+import { firestoreConnect } from 'react-redux-firebase'
+import { compose } from 'redux'
 class SignUp extends Component {
   state = {
     email: '',
@@ -10,18 +11,19 @@ class SignUp extends Component {
     firstName: '',
     lastName: '',
   }
-  handleChange = (e) => {
+  handleChange = (e) => { 
     this.setState({
       [e.target.id]: e.target.value
     })
   }
   handleSubmit = (e) => {
     e.preventDefault();
-    this.props.signUp(this.state);
+    this.props.signUp(this.state, this.props.history);
   }
   render() {
-    const { auth, authError } = this.props;
-    if (auth.uid) return <Redirect to='/' /> 
+    const {user, auth, authError } = this.props;
+    if (user) return <Redirect to='/' />
+
     return (
       <div className="container">
         <form className="white" onSubmit={this.handleSubmit}>
@@ -55,7 +57,11 @@ class SignUp extends Component {
 }
 
 const mapStateToProps = (state) => {
+  const uid = state.firebase.auth.uid;
+  const users = state.firestore.data.users;
+  const user = users ? users[uid] : null
   return {
+    user : user,
     auth: state.firebase.auth,
     authError: state.auth.authError
   }
@@ -63,8 +69,18 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch)=> {
   return {
-    signUp: (creds) => dispatch(signUp(creds))
+    signUp: (creds, history) => dispatch(signUp(creds, history))
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(SignUp)
+export default compose(
+  
+  firestoreConnect([
+    { collection: 'users',
+    
+    },
+
+  ]),connect(mapStateToProps, mapDispatchToProps)
+)(SignUp)
+
+

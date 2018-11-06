@@ -33,7 +33,8 @@ export const tradeStock = (stock, stock_data, history) => {
     })
     
     .then(() => {
-        history.push('/');
+      console.log("Account Created");
+      history.push('/');
       dispatch({ type: 'TRADE_SUCCESS' });
     }).catch(err => {
       dispatch({ type: 'TRADE_ERROR' }, err);

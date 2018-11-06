@@ -4,7 +4,7 @@ import Notifications from './Notifications'
 import StatusPanel from './StatusPanel'
 
 import { connect } from 'react-redux'
-import { firestoreConnect } from 'react-redux-firebase'
+import { firestoreConnect,isLoaded } from 'react-redux-firebase'
 import { compose } from 'redux'
 import { Redirect } from 'react-router-dom'
 
@@ -12,11 +12,21 @@ import { Redirect } from 'react-router-dom'
 
 class Dashboard extends Component {
 
-
+  state = {
+    trigger: 0
+  }
+  componentDidUpdate() {
+  }
 
   render() {
 
     const { stocks, auth, notifications, stock_data, total, liquid, Timer } = this.props;
+    if (!isLoaded(stocks)) {
+      console.log(stocks)
+      return <div>Loading...</div>
+    }
+    console.log(stocks)
+
     if (!auth.uid) return <Redirect to='/signin' /> 
     return (
       <div className="dashboard container">
@@ -67,6 +77,7 @@ const mapStateToProps = (state) => {
 export default compose(
 
   firestoreConnect([
+
     { collection: 'users',
     },
     { collection: 'stock_data',

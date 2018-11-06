@@ -14,7 +14,8 @@ class Trade extends Component {
     id: '',
     name: 'Apple',
     quantity: '',
-    transaction: ''
+    transaction: '',
+    trigger: 0
   }
   handleChange = (e) => {
     this.setState({
@@ -33,7 +34,8 @@ class Trade extends Component {
     console.log("false")
     
   }
-
+  componentDidUpdate() {
+  }
   isTransactionValid() {
     if(this.state.transaction === '') {
       return false;
@@ -61,10 +63,10 @@ class Trade extends Component {
     return true
   }
   render() {
-    if (!isLoaded(this.props)) {
+    const { stocks, auth, notifications, stock_data, total, liquid, Timer } = this.props;
+    if (!isLoaded(Timer)) {
       return <div>Loading...</div>
     }
-    const { stocks, auth, notifications, stock_data, total, liquid, Timer } = this.props;
     if (!auth.uid) return <Redirect to='/signin' /> 
     var detail_name = "Apple"
     if (stock_data && this.state.name)  {
