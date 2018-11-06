@@ -6,6 +6,7 @@ import { Redirect } from 'react-router-dom'
 
 import moment from 'moment'
 import { ResponsiveLine } from '@nivo/line'
+import { Collapsible , CollapsibleItem} from 'react-materialize';
 
 const StockDetails = (props) => {
   const { auth, stock_info, Timer, quantity} = props;
@@ -23,14 +24,22 @@ const StockDetails = (props) => {
     }
     return (
       <div className={ ""}>
-        <div className="card z-depth-0">
-          <div className="card-content">
-            <span className="card-title">{stock_info.name}</span>
-            <span className="card-title">{quantity}</span>
-            <span className="card-title">{stock_info.price[Timer].toFixed(2)}</span>
-            <p>{stock_info.ticker}</p>
+        <div className="card z-depth-0 ">
+          <div className="no_bottom_padding card-content ">
+            <div className="row no_bottom_margin">
+            <div className="col m6 ">
+                <span className="card-title">{stock_info.name}</span>
+                <p>{stock_info.ticker}</p>
+              </div>
+              <div className="col m6  ">
+                <span className="card-title  right-align ">{stock_info.price[Timer].toFixed(2)}</span>
+                <span className="card-title  right-align">{quantity}</span>
+              </div>
+            </div>
           </div>
-          <div className="card-action grey lighten-4 grey-text">
+          <Collapsible>
+            <CollapsibleItem header='View Graph Detail' icon='show_chart'>
+
             <div className="chart_box">
               <ResponsiveLine data={[
                   {
@@ -41,10 +50,10 @@ const StockDetails = (props) => {
                 ]}
               
                 margin={{
-                  "top": 50,
-                  "right": 60,
-                  "bottom": 50,
-                  "left": 60
+                  "top": 25,
+                  "right": 30,
+                  "bottom": 25,
+                  "left": 30
               }}
               xScale={{
                   "type": "point"
@@ -85,7 +94,9 @@ const StockDetails = (props) => {
 
           />
             </div>
-          </div>
+            </CollapsibleItem>
+
+          </Collapsible>
         </div>
       </div>
       

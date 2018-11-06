@@ -7,7 +7,7 @@ import { firestoreConnect, isLoaded } from 'react-redux-firebase'
 import { compose } from 'redux'
 import { Redirect } from 'react-router-dom'
 import StockDetails from './StockDetails';
-import { Input , Toast} from 'react-materialize';
+import { Input } from 'react-materialize';
 
 class Trade extends Component {
   state = {
@@ -130,7 +130,7 @@ class Trade extends Component {
 
           <div className="col s12 m5 offset-m1">
             <StatusPanel Timer={Timer} liquid = {liquid} total = {total} stocks={stocks} stock_data={stock_data}></StatusPanel>
-            <Notifications notifications={notifications} />
+            <Notifications Timer={Timer} />
           </div>
           <div className="col s12 m12 ">
       

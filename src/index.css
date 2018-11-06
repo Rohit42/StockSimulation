@@ -60,3 +60,15 @@ input[type=password]:not(.browser-default):focus:not([readonly]) + label{
 .float_right{
   float: right;
 }
+
+.float_left{
+  float: left;
+}
+
+.no_bottom_padding {
+  padding-bottom: 5px !important;
+}
+
+.no_bottom_margin {
+  margin-bottom: 5px !important;
+}

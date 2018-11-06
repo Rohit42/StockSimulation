@@ -32,7 +32,7 @@ class Dashboard extends Component {
             </div>
             <StatusPanel liquid = {liquid} total = {total} stocks={stocks} stock_data={stock_data} Timer = {Timer}></StatusPanel>
 
-            <Notifications notifications={notifications} />
+            <Notifications Timer={Timer} />
           </div>
         </div>
       </div>
@@ -57,7 +57,6 @@ const mapStateToProps = (state) => {
     total: total,
     stocks: stocks,
     auth: state.firebase.auth,
-    notifications: state.firestore.ordered.notifications,
     stock_data : stock_data,
     Timer : Timer
   }
