@@ -10,6 +10,7 @@ import thunk from 'redux-thunk'
 import { reduxFirestore, getFirestore } from 'redux-firestore';
 import { reactReduxFirebase, getFirebase } from 'react-redux-firebase';
 import fbConfig from './config/fbConfig'
+import { BrowserRouter } from 'react-router-dom'
 
 const store = createStore(rootReducer,
   compose(
@@ -20,7 +21,8 @@ const store = createStore(rootReducer,
 );
 
 store.firebaseAuthIsReady.then(() => {
-  ReactDOM.render(<Provider store={store}><App /></Provider>, document.getElementById('root'));
+  ReactDOM.render(      <BrowserRouter forceRefresh={false}>
+    <Provider store={store}><App /></Provider></BrowserRouter>, document.getElementById('root'));
   registerServiceWorker();
 });
 

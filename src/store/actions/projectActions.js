@@ -11,7 +11,7 @@ export const tradeStock = (stock, stock_data, history) => {
     console.log(stock_data)
     console.log(stock_data[stock.name].price);
 
-    if(stock.transaction === "Buy") {
+    if(stock.transaction === 'Buy') {
       const cost = parseFloat("" + stock_data[stock.name].price[timer]) * parseFloat(stock.quantity + "");
       liquid = liquid - cost;
       if (stock.name in stock_map) {
@@ -35,6 +35,8 @@ export const tradeStock = (stock, stock_data, history) => {
     .then(() => {
       console.log("Account Created");
       history.push('/');
+
+
       dispatch({ type: 'TRADE_SUCCESS' });
     }).catch(err => {
       dispatch({ type: 'TRADE_ERROR' }, err);

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { BrowserRouter, Switch, Route } from 'react-router-dom'
+import { BrowserRouter, Switch, Route, withRouter } from 'react-router-dom'
 import Navbar from './components/layout/Navbar'
 import Dashboard from './components/dashboard/Dashboard'
 import StockDetails from './components/stocks/StockDetails'
@@ -12,9 +12,8 @@ import Trade from './components/stocks/Trade'
 class App extends Component {
   render() {
     return (
-      <BrowserRouter forceRefresh={false}>
         <div className="App">
-          <Navbar />
+          <Navbar />  
           <Switch>
             <Route exact path='/'component={Dashboard} />
             <Route path='/signin' component={SignIn} />
@@ -22,9 +21,8 @@ class App extends Component {
             <Route path='/trade' component={Trade} />
           </Switch>
         </div>
-      </BrowserRouter>
     );
   }
 }
 
-export default App;
+export default (App);

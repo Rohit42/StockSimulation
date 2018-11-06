@@ -7,16 +7,26 @@ import { firestoreConnect, isLoaded } from 'react-redux-firebase'
 import { compose } from 'redux'
 import { Redirect } from 'react-router-dom'
 import StockDetails from './StockDetails';
-import { Input } from 'react-materialize';
+import { Input, Row } from 'react-materialize';
 
 class Trade extends Component {
-  state = {
-    id: '',
-    name: 'Apple',
-    quantity: '',
-    transaction: '',
-    trigger: 0
+
+
+  constructor (props){
+    super(props);
+  
+    this.state = {
+      id: '',
+      name: 'Apple',
+      quantity: 0,
+      transaction: "Sell",
+      trigger: 1
+    }
+  
+    this.onRadioChange = this.onRadioChange.bind(this);
+  
   }
+
   handleChange = (e) => {
     this.setState({
       [e.target.id]: e.target.value
@@ -34,14 +44,20 @@ class Trade extends Component {
     console.log("false")
     
   }
-  componentDidUpdate() {
-  }
+
   isTransactionValid() {
+    //1 is buy -1 is sell
+    console.log(this.state.transaction)
     if(this.state.transaction === '') {
+      window.Materialize.toast("Buy or Sell!", 2000)
+      return false;
+    }
+    if((this.state.quantity + "") === '0' || this.state.quantity === "") {
+      window.Materialize.toast("Gotta trade something!", 2000)
       return false;
     }
     else {
-      if(this.state.transaction === "Sell") {
+      if(this.state.transaction === 'Sell') {
         const currentHoldings = this.props.stocks[this.state.name] ?this.props.stocks[this.state.name] : 0
         if (this.state.quantity > currentHoldings) {
           window.Materialize.toast("Can't sell stock you don't have!", 2000)
@@ -49,7 +65,7 @@ class Trade extends Component {
         }
 
       }
-      if(this.state.transaction === "Buy") {
+      if(this.state.transaction === 'Buy') {
         //Enough cash
 
 
@@ -62,6 +78,17 @@ class Trade extends Component {
     }
     return true
   }
+
+  onRadioChange(value) {
+    
+    console.log(this.state.transaction);
+    this.setState({
+      transaction: (this.state.transaction === "Buy") ? "Sell" : "Buy"
+    });
+    console.log(this.state.transaction);
+
+  }
+
   render() {
     const { stocks, auth, notifications, stock_data, total, liquid, Timer } = this.props;
     if (!isLoaded(Timer)) {
@@ -77,6 +104,8 @@ class Trade extends Component {
         }
       }
     }
+    
+
     return (
       <div className="container">
           <div className="row">
@@ -88,9 +117,15 @@ class Trade extends Component {
                         <h5 className="grey-text text-darken-3">Trade</h5>
                     </div>
                     <div className="col m6 ">
-                        <div className="float_right">            
-                        <Input name='BuySell' type='radio' value='Buy' label='Buy' onChange={(e) => this.setState({ transaction: e.target.value })} />
-                        <Input name='BuySell' type='radio' value='Sell' label='Sell' onChange={(e) => this.setState({ transaction: e.target.value })}/>
+                        <div className="float_right">                       
+                        <div class="switch" onChange={this.onRadioChange}>
+                            <label>
+                              Sell
+                              <input type="checkbox"/>
+                              <span class="lever"></span>
+                              Buy
+                            </label>
+                          </div>
                         </div>  
                     </div>
                 </div>

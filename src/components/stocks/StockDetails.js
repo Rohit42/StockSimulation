@@ -11,6 +11,9 @@ import { Collapsible , CollapsibleItem} from 'react-materialize';
 const StockDetails = (props) => {
   const { auth, stock_info, Timer, quantity} = props;
   if (!auth.uid) return <Redirect to='/signin' />
+  if ((quantity+"") === "0"){
+    return (<div></div>);
+  }
   if (stock_info) {
     //graph_data = graph_data.slice(0, Timer);
     var graph_data = []
